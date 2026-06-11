@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Booking</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+background:#08122d;
+display:flex;
+justify-content:center;
+}
+
+.container{
+width:400px;
+background:white;
+padding:20px;
+border-radius:20px;
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+color:#08122d;
+}
+
+.route-box{
+background:#57d2b3;
+padding:15px;
+border-radius:12px;
+margin-bottom:20px;
+}
+
+.route-box input{
+width:100%;
+padding:10px;
+margin:5px 0;
+border:none;
+border-radius:8px;
+}
+
+.transport{
+display:flex;
+justify-content:space-between;
+margin-bottom:20px;
+}
+
+.transport div{
+width:60px;
+height:60px;
+background:#08122d;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+border-radius:10px;
+font-size:25px;
+cursor:pointer;
+}
+
+.ticket{
+background:#f5f5f5;
+padding:15px;
+border-radius:10px;
+margin-top:15px;
+}
+
+.ticket h3{
+color:#08122d;
+}
+
+.price{
+font-weight:bold;
+margin-top:10px;
+}
+
+button{
+margin-top:10px;
+padding:10px 20px;
+border:none;
+background:#57d2b3;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h2>Book Your Ticket</h2>
+
+<div class="route-box">
+
+<input type="text" id="fromCity" placeholder="From">
+<input type="text" id="toCity" placeholder="To">
+<input type="date" id="journeyDate">
+
+</div>
+
+<div class="transport">
+
+<button onclick="selectTransport('Bus')">🚌 Bus</button>
+
+<button onclick="selectTransport('Train')">🚆 Train</button>
+
+<button onclick="selectTransport('Flight')">✈ Flight</button>
+
+<button onclick="selectTransport('Ship')">🚢 Ship</button>
+
+<button onclick="selectTransport('Car')">🚗 Car</button>
+
+</div>
+
+<h3 id="selectedTransport">
+Selected: Train
+</h3>
+<div id="ticketContainer"></div>
+
+
+
+</div>
+<script>
+
+const tickets = {
+
+Bus: `
+<div class="ticket">
+<h3>KPN Travels</h3>
+<p>Trichy → Chennai</p>
+<p>06:00 PM</p>
+<div class="price">₹850</div>
+<a href="seat.html"
+onclick="
+localStorage.setItem('transport','Bus');
+localStorage.setItem('route','Trichy → Chennai');
+localStorage.setItem('price','850');
+">
+<button>Book Now</button>
+</a>
+</div>
+
+<div class="ticket">
+<h3>SETC</h3>
+<p>Madurai → Chennai</p>
+<p>08:30 PM</p>
+<div class="price">₹750</div>
+<a href="seat.html"
+onclick="
+localStorage.setItem('transport','Bus');
+localStorage.setItem('route','Madurai → Chennai');
+localStorage.setItem('price','750');
+">
+<button>Book Now</button>
+</a>
+</div>
+
+<div class="ticket">
+<h3>Parveen Travels</h3>
+<p>Coimbatore → Bangalore</p>
+<p>10:00 PM</p>
+<div class="price">₹1200</div>
+<a href="seat.html"
+onclick="
+localStorage.setItem('transport','Bus');
+localStorage.setItem('route','Coimbatore → Bangalore');
+localStorage.setItem('price','1200');
+">
+<button>Book Now</button>
+</a>
+</div>
+`,
+
+Train: `
+<div class="ticket">
+<h3>Tejas Express</h3>
+<p>Trichy → Chennai</p>
+<p>05:05 PM</p>
+<div class="price">₹975</div>
+<a href="seat.html"
+onclick="
+localStorage.setItem('transport','Train');
+localStorage.setItem('route','Trichy → Chennai');
+localStorage.setItem('price','975');
+">
+<button>Book Now</button>
+</a>
+
+</div>
+
+<div class="ticket">
+<h3>Vande Bharat</h3>
+<p>Chennai → Bangalore</p>
+<p>06:00 AM</p>
+<div class="price">₹1450</div>
+<a href="seat.html"
+onclick="
+localStorage.setItem('transport','Train');
+localStorage.setItem('route','Chennai → Bangalore');
+localStorage.setItem('price','1450');
+">
+<button>Book Now</button>
+</a>
+
+</div>
+
+<div class="ticket">
+<h3>Pallavan Express</h3>
+<p>Madurai → Chennai</p>
+<p>09:15 PM</p>
+<div class="price">₹850</div>
+<a href="seat.html"
+onclick="
+localStorage.setItem('transport','Train');
+localStorage.setItem('route','Madurai → Chennai');
+localStorage.setItem('price','850');
+">
+<button>Book Now</button>
+</a>
+
+</div>
+
+<div class="ticket">
+<h3>Cheran Express</h3>
+<p>Coimbatore → Chennai</p>
+<p>10:30 PM</p>
+<div class="price">₹920</div>
+<a href="seat.html"
+onclick="
+localStorage.setItem('transport','Train');
+localStorage.setItem('route','Coimbatore → Chennai');
+localStorage.setItem('price','920');
+">
+<button>Book Now</button>
+</a>
+
+</div>
+`,
+
+Flight: `
+<div class="ticket">
+<h3>IndiGo</h3>
+<p>Chennai → Mumbai</p>
+<p>09:15 AM</p>
+<div class="price">₹3999</div>
+<a href="seat.html"
+onclick="
+localStorage.setItem('transport','Flight');
+localStorage.setItem('route','Chennai → Mumbai');
+localStorage.setItem('price','3999');
+">
+<button>Book Now</button>
+</a>
+
+</div>
+
+<div class="ticket">
+<h3>Air India</h3>
+<p>Chennai → Delhi</p>
+<p>12:30 PM</p>
+<div class="price">₹4500</div>
+<a href="seat.html"
+onclick="
+localStorage.setItem('transport','Flight');
+localStorage.setItem('route','Chennai → Delhi');
+localStorage.setItem('price','4500');
+">
+<button>Book Now</button>
+</a>
+
+</div>
+
+<div class="ticket">
+<h3>Akasa Air</h3>
+<p>Bangalore → Hyderabad</p>
+<p>03:45 PM</p>
+<div class="price">₹3200</div>
+<a href="seat.html"
+onclick="
+localStorage.setItem('transport','Flight');
+localStorage.setItem('route','Bangalore → Hyderabad');
+localStorage.setItem('price','3200');
+">
+<button>Book Now</button>
+</a>
+
+</div>
+`,
+
+Ship: `
+<div class="ticket">
+<h3>Andaman Ferry</h3>
+<p>Chennai → Port Blair</p>
+<p>10:00 AM</p>
+<div class="price">₹2200</div>
+<a href="seat.html"
+onclick="
+localStorage.setItem('transport','Ship');
+localStorage.setItem('route','Chennai → Port Blair');
+localStorage.setItem('price','2200');
+">
+<button>Book Now</button>
+</a>
+</div>
+
+<div class="ticket">
+<h3>Lakshadweep Cruise</h3>
+<p>Kochi → Lakshadweep</p>
+<p>08:00 AM</p>
+<div class="price">₹3500</div>
+<a href="seat.html"
+onclick="
+localStorage.setItem('transport','Ship');
+localStorage.setItem('route','Kochi → Lakshadweep');
+localStorage.setItem('price','3500');
+">
+<button>Book Now</button>
+</a>
+</div>
+`,
+
+Car: `
+<div class="ticket">
+<h3>Uber Sedan</h3>
+<p>Chennai → Pondicherry</p>
+<p>Any Time</p>
+<div class="price">₹2500</div>
+<a href="seat.html"
+onclick="
+localStorage.setItem('transport','Car');
+localStorage.setItem('route','Chennai → Pondicherry');
+localStorage.setItem('price','2500');
+">
+<button>Book Now</button>
+</a>
+</div>
+
+<div class="ticket">
+<h3>Ola Prime</h3>
+<p>Coimbatore → Ooty</p>
+<p>Any Time</p>
+<div class="price">₹1800</div>
+<a href="seat.html"
+onclick="
+localStorage.setItem('transport','Car');
+localStorage.setItem('route','Coimbatore → Ooty');
+localStorage.setItem('price','1800');
+">
+<button>Book Now</button>
+</a>
+
+</div>
+
+<div class="ticket">
+<h3>Rapido Cab</h3>
+<p>Bangalore → Mysore</p>
+<p>Any Time</p>
+<div class="price">₹2200</div>
+<a href="seat.html"
+onclick="
+localStorage.setItem('transport','Car');
+localStorage.setItem('route','Bangalore → Mysore');
+localStorage.setItem('price','2200');
+">
+<button>Book Now</button>
+</a>
+
+</div>
+`
+};
+
+function selectTransport(type){
+document.getElementById("selectedTransport").innerHTML =
+"Selected: " + type;
+
+document.getElementById("ticketContainer").innerHTML =
+tickets[type];
+}
+
+window.onload = function(){
+selectTransport('Train');
+}
+
+</script>

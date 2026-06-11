@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>History</title>
+
+<style>
+
+body{
+font-family:Arial;
+padding:20px;
+background:#08122d;
+color:white;
+}
+
+.card{
+background:white;
+color:black;
+padding:15px;
+margin:10px 0;
+border-radius:10px;
+}
+
+</style>
+
+</head>
+<body>
+
+<h1>Booking History</h1>
+
+<div id="historyContainer"></div>
+<script>
+
+let history =
+JSON.parse(localStorage.getItem("history")) || [];
+
+let container =
+document.getElementById("historyContainer");
+
+if(history.length === 0){
+
+container.innerHTML =
+"<p>No Booking History Found</p>";
+
+}
+else{
+
+history.reverse().forEach(item=>{
+
+container.innerHTML += `
+
+<div class="card">
+
+<b>${item.transport}</b><br><br>
+
+${item.route}<br>
+
+Seat : ${item.seat}<br>
+
+Amount : ₹${item.price}
+
+</div>
+
+`;
+
+});
+
+}
+
+</script>
+
+</body>
+</html>

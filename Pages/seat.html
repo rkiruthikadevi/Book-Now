@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seat Booking</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:#08122d;
+display:flex;
+justify-content:center;
+
+}
+
+.container{
+width:90%;
+max-width:1200px;
+background:white;
+padding:20px;
+border-radius:20px;
+text-align:center;
+}
+
+h2{
+color:#08122d;
+margin-bottom:10px;
+}
+
+#selectedSeat{
+font-weight:600;
+margin-bottom:15px;
+}
+
+.legend{
+display:flex;
+justify-content:center;
+gap:15px;
+margin-bottom:15px;
+font-size:14px;
+}
+
+.legend span{
+display:flex;
+align-items:center;
+gap:5px;
+}
+
+.box{
+width:15px;
+height:15px;
+border-radius:4px;
+display:inline-block;
+}
+
+.available{
+background:#57d2b3;
+}
+
+.bookedbox{
+background:red;
+}
+
+.selectedbox{
+background:#08122d;
+}
+
+.seats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-top:20px;
+}
+
+.seat{
+height:55px;
+background:#57d2b3;
+border-radius:10px;
+display:flex;
+justify-content:center;
+align-items:center;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+}
+
+.booked{
+background:red;
+color:white;
+cursor:not-allowed;
+}
+
+.selected{
+background:#08122d;
+color:white;
+}
+
+button{
+margin-top:25px;
+width:100%;
+padding:14px;
+border:none;
+background:#57d2b3;
+border-radius:10px;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h2 id="transportTitle">Seat Selection</h2>
+
+<p id="selectedSeat">
+Selected Seat : None
+</p>
+
+<div class="legend">
+<span><div class="box available"></div>Available</span>
+<span><div class="box bookedbox"></div>Booked</span>
+<span><div class="box selectedbox"></div>Selected</span>
+</div>
+<div class="passenger-form">
+
+<h3>Passenger Details</h3>
+
+<input type="text" id="passengerName" placeholder="Enter Name">
+
+<input type="number" id="passengerAge" placeholder="Enter Age">
+
+<select id="passengerGender">
+<option value="">Select Gender</option>
+<option>Male</option>
+<option>Female</option>
+<option>Other</option>
+</select>
+
+</div>
+
+<div id="seatContainer"></div>
+<button onclick="goToPayment()">
+Continue To Payment
+</button>
+<script>
+
+const transport =
+localStorage.getItem("transport") || "Train";
+
+document.getElementById("transportTitle").innerHTML =
+transport + " Seat Selection";
+
+const layouts = {
+
+Bus: `
+<div class="seats">
+<div class="seat booked">1</div>
+<div class="seat booked">2</div>
+<div class="seat">3</div>
+<div class="seat">4</div>
+<div class="seat">5</div>
+<div class="seat">6</div>
+<div class="seat booked">7</div>
+<div class="seat">8</div>
+<div class="seat">9</div>
+<div class="seat">10</div>
+<div class="seat booked">11</div>
+<div class="seat">12</div>
+</div>
+`,
+
+Train: `
+<div class="seats">
+<div class="seat">A1</div>
+<div class="seat">A2</div>
+<div class="seat booked">A3</div>
+<div class="seat">A4</div>
+<div class="seat">B1</div>
+<div class="seat booked">B2</div>
+<div class="seat">B3</div>
+<div class="seat">B4</div>
+<div class="seat">C1</div>
+<div class="seat">C2</div>
+<div class="seat">C3</div>
+<div class="seat booked">C4</div>
+</div>
+`,
+
+Flight: `
+<div class="seats">
+<div class="seat">F1</div>
+<div class="seat">F2</div>
+<div class="seat booked">F3</div>
+<div class="seat booked">F4</div>
+<div class="seat">F5</div>
+<div class="seat">F6</div>
+<div class="seat">F7</div>
+<div class="seat booked">F8</div>
+</div>
+`,
+
+Ship: `
+<div class="seats">
+<div class="seat booked">S1</div>
+<div class="seat">S2</div>
+<div class="seat booked">S3</div>
+<div class="seat">S4</div>
+<div class="seat">S5</div>
+<div class="seat">S6</div>
+</div>
+`,
+
+Car: `
+<div class="seats">
+<div class="seat">C1</div>
+<div class="seat">C2</div>
+<div class="seat booked">C3</div>
+<div class="seat">C4</div>
+</div>
+`
+
+};
+
+document.getElementById("seatContainer").innerHTML =
+layouts[transport];
+
+const seats = document.querySelectorAll(".seat");
+
+seats.forEach(seat=>{
+
+if(!seat.classList.contains("booked")){
+
+seat.addEventListener("click",()=>{
+
+seat.classList.toggle("selected");
+
+const selectedSeats =
+document.querySelectorAll(".seat.selected");
+
+let seatNumbers = [];
+
+selectedSeats.forEach(s=>{
+seatNumbers.push(s.innerText);
+});
+
+document.getElementById("selectedSeat").innerHTML =
+"Selected Seats : " + seatNumbers.join(", ");
+
+});
+
+}
+
+});
+
+function goToPayment(){
+
+const selectedSeats =
+document.querySelectorAll(".seat.selected");
+
+if(selectedSeats.length===0){
+
+alert("Please select a seat");
+return;
+
+}
+
+let seatNumbers = [];
+
+selectedSeats.forEach(s=>{
+seatNumbers.push(s.innerText);
+});
+
+localStorage.setItem(
+"seatNumber",
+seatNumbers.join(", ")
+);
+let basePrice =
+parseInt(localStorage.getItem("price"));
+
+let totalPrice =
+basePrice * selectedSeats.length;
+
+localStorage.setItem(
+"totalPrice",
+totalPrice
+);
+const name =
+document.getElementById("passengerName").value;
+
+const age =
+document.getElementById("passengerAge").value;
+
+const gender =
+document.getElementById("passengerGender").value;
+
+if(name==="" || age==="" || gender===""){
+
+alert("Please fill passenger details");
+return;
+
+}
+
+localStorage.setItem("passengerName",name);
+localStorage.setItem("passengerAge",age);
+localStorage.setItem("passengerGender",gender);
+window.location.href="payment.html";
+
+}
+
+</script>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment</title>
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+body{
+background:#08122d;
+display:flex;
+justify-content:center;
+
+}
+.container{
+width:400px;
+background:white;
+padding:25px;
+border-radius:20px;
+}
+h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+.ticket-details{
+background:#f5f5f5;
+padding:15px;
+border-radius:10px;
+margin-bottom:20px;
+}
+
+.payment-option{
+background:#57d2b3;
+padding:15px;
+margin-top:10px;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.total{
+margin-top:20px;
+font-size:22px;
+font-weight:bold;
+text-align:center;
+}
+
+button{
+width:100%;
+padding:15px;
+margin-top:20px;
+border:none;
+background:#08122d;
+color:white;
+border-radius:10px;
+font-size:18px;
+cursor:pointer;
+}
+
+</style>
+</head>
+<body>
+    
+
+<div class="container">
+    <p id="seatDisplay"></p>
+
+<h2>Payment</h2>
+
+<div class="ticket-details">
+<p id="routeDisplay"></p>
+<p id="seatNo"></p>
+<p id="transportDisplay"></p>
+</div>
+
+<div class="payment-option" onclick="selectPayment('UPI')">
+UPI Payment
+</div>
+
+<div class="payment-option" onclick="selectPayment('Card')">
+Credit / Debit Card
+</div>
+
+<div class="payment-option" onclick="selectPayment('Wallet')">
+Wallet Payment
+</div>
+
+<div class="payment-option" onclick="selectPayment('Net Banking')">
+Net Banking
+</div>
+
+<p id="selectedPayment" style="margin-top:15px;font-weight:bold;">
+Selected Payment : None
+</p>
+
+<div class="total" id="fareDisplay">
+Total Fare : ₹0
+</div>
+
+<button onclick="confirmBooking()">
+Confirm Booking
+</button>
+</div>
+<script>
+
+document.getElementById("seatDisplay").innerHTML =
+"Selected Seat : " +
+(localStorage.getItem("seatNumber") || "-");
+
+document.getElementById("routeDisplay").innerHTML =
+"<b>Route:</b> " +
+(localStorage.getItem("route") || "-");
+
+document.getElementById("seatNo").innerHTML =
+"<b>Seat:</b> " +
+(localStorage.getItem("seatNumber") || "-");
+
+document.getElementById("transportDisplay").innerHTML =
+"<b>Transport:</b> " +
+(localStorage.getItem("transport") || "-");
+
+document.getElementById("fareDisplay").innerHTML =
+"Total Fare : ₹" +
+(localStorage.getItem("totalPrice") || "0");
+function selectPayment(method){
+
+document
+.querySelectorAll(".payment-option")
+.forEach(option=>{
+option.classList.remove("selected");
+});
+
+event.target.classList.add("selected");
+
+localStorage.setItem(
+"paymentMethod",
+method
+);
+
+document.getElementById("selectedPayment").innerHTML =
+"Selected Payment : " + method;
+
+}
+
+function confirmBooking(){
+
+const payment =
+localStorage.getItem("paymentMethod");
+
+if(!payment){
+
+alert("Please select a payment method");
+return;
+
+}
+
+window.location.href="success.html";
+
+}
+</script>
+</body>
+</html>
